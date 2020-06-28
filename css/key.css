@@ -1,0 +1,292 @@
+
+.header {
+    width: 100%;
+    height: 60px;
+    background-color: #3B85EB;
+}
+
+.header .big {
+    list-style-type: none;
+    width: 60%;
+    /*position: relative;*/
+    margin-left: 100px;
+}
+
+.header .big .nnn {
+    float: left;
+    width: 80px;
+    height: 60px;
+    margin-left: 10px;
+}
+
+.header .big .nnn:hover {
+    background-color: #0F69E7;
+}
+
+.header .big .nnn a {
+    padding: 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    float: left;
+}
+
+
+.header .big .nn {
+    float: left;
+    width: 80px;
+    height: 60px;
+    margin-left: 10px;
+}
+
+.header .big .nn:hover {
+    background-color: #0F69E7;
+}
+
+.header .big .nn a {
+    padding: 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    float: left;
+}
+
+/*.header .big .nn:hover small {*/
+/*display: inline-block;*/
+/*}*/
+
+.small {
+    list-style-type: none;
+    width: 100px;
+    z-index: 2;
+    display: none;
+    margin-top: 60px;
+    position: absolute;
+    background-color: #3B85EB;
+}
+
+.small .mmm a {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.header .small .mmm:hover {
+    background-color: #0F69E7;
+}
+
+.header .btn1 {
+    width: 250px;
+    border-radius: 5px;
+    height: 50px;
+    margin: 5px;
+    background-color: white;
+    border: none;
+    color: #CCCCC4;
+    font-size: 16px;
+    margin-left: 100px;
+}
+
+.header .btn2 {
+    background-color: #F76FE8;
+    border: none;
+    border-radius: 5px;
+    height: 50px;
+    width: 70px;
+    color: white;
+    margin-left: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.header .btn3 {
+    background-color: #F76FE8;
+    border: none;
+    border-radius: 5px;
+    height: 50px;
+    width: 70px;
+    color: white;
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+
+
+/*Ò³Ãæ²¿·Ö*/
+.wrap {
+    width: 1000px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 3px solid #3B85EB;
+}
+
+.wrap h3{
+    width: 150px;
+    font-size: 20px;
+    background-color: #3B85EB;
+    color: white;
+    text-align: center;
+    margin-left: 300px;
+}
+
+.fom {
+    overflow: hidden;
+}
+
+.fom p {
+    float: left;
+    margin: 30px auto;
+}
+
+.fom .lab1 {
+    margin-left: 30px;
+}
+
+.fom .word7 {
+    margin-left: 30px;
+}
+
+.tag p input {
+    margin: 10px;
+}
+
+.fom .sel {
+    margin-left: 10px;
+
+}
+
+.item {
+    position: relative;
+    border-top: 1px dashed #eee;
+    padding: 20px;
+}
+
+.item>p {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.xiang .title {
+    color: skyblue;
+    font-size: 16px;
+}
+
+.xiang  {
+    font-size: 12px;
+}
+
+.xiang p {
+    margin: 12px auto;
+}
+
+.taglab {
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.tag {
+    margin-left: 30px;
+}
+
+.qi span{
+    margin-right: 20px;
+}
+
+.anter  {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.foot {
+    width: 100%;
+    height: 30px;
+    margin-top: 150px;
+    background-color: #3B85EB;
+}
+
+.foot p {
+    text-align: center;
+}
+
+.list{
+    overflow: hidden;
+    margin-right: 100px;
+}
+.list ul{
+    float: right;
+    overflow: hidden;
+}
+.list ul li{
+    float: left;
+    margin: 5px 10px;
+}
+.list ul li span{
+    border-radius: 5px;
+    border: 1px solid #cccccc;
+}
+.disabled{
+    background-color: #EFEFEF;
+    color: white;
+}
+.list ul li .active{
+    background-color: #3B85EB;
+    color: white;
+}
+
+.update{
+    background-color: rgba(0,0,0,0.7);
+    width: 100%;
+    position: fixed;
+    top: 20px;
+    left: 0px;
+    display: none;
+}
+.update form{
+    width: 1000px;
+    border: 1px solid #30558b;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: white;
+    position: relative;
+}
+.update form h3{
+    text-align: center;
+}
+.update form p{
+    margin: 15px 0px;
+}
+.update form .closed{
+    display: block;
+    font-size: 60px;
+    font-weight: 900;
+    color: brown;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+.update form .closed{
+    display: block;
+}
+.frm-main{
+    width: 70%;
+    margin: 0px auto;
+}
+.frm-main input{
+    width: 60%;
+}
+.tag div{
+    width: 100%;
+}
+.tag p{
+    margin-left: 60px;
+}
+.tag p lable{
+    margin: 0px 5px;
+}

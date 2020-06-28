@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/index.css">
+    <title></title>
+    <script src="../js/jquery-1.10.2.js"></script>
+    <script src="../js/LodopFuncs.js"></script>
+    <script>
+        $(function(){
+            $(".big>li").hover(
+                    function(){
+                        $(this).children("ul").stop(true,true).show(500)
+                    },
+                    function(){
+                        $(this).children("ul").stop(true,true).hide(500)
+                    }
+            )
+
+        })
+        $(function () {
+
+
+        //查出标题组，题目类型：Java，JS，html，css
+        $.ajax({
+            type:"get",
+            url:"http://39.106.118.44:8081/librarytag/tag",
+            data:"",
+            success: function (msg) {
+                $(".tag").append("<p></p>")
+                for(var i=0;i<msg.length;i++){
+                    $(".tag p").append("<input type='checkbox' value='"+
+                            msg[i].tagId+"'name='tag'>"+msg[i].tagName)
+                }
+            }
+        })
+        //隐藏或显示选项文本框
+        $(".validate-selection").change(function(){
+            var v=$(".validate-selection").val()
+            if(v==1||v==2){
+                $(".questionsel").css({display:"block"})
+            }
+            else{
+                $(".questionsel").css({display:"none"})
+            }
+        })
+        //添加选项
+        $(".add").click(function(){
+            $(".questionsel").append('<p><input type="text" name="btn9">'
+            +'<input type="button" value="-" class="del"></p>')
+        })
+        //删除选项
+        $(".questionsel").delegate(".del","click",function(){
+            $(this).parent().remove();
+        })
+            //表单验证
+              $(".btn10").click(function () {
+                   var quet= $(".input[name=questionOptions]")
+                  $("span").html("*必填")
+                  var flg1=false;
+                  var flg2=false;
+                  quet.each(function(){
+                      if($(this).val()==""){
+                          flg1=true;
+                      }
+                  })
+            $("input[name=tags]").each(function(){
+                if($(this).prop("checked")==true){
+                    flg2=true;
+                }
+            })
+            if($("input[name=questionTitle]").val()==""){
+                      $(".btn8").html("*题干不能为空")
+                  }
+                  else if($(".questionsel").css("display")=="block"&&flg1==true){
+                          $(".tabl1").html("*选项不能为空")
+                  }
+                  else if($("input[name=answer]").val()==""){
+                      $(".tabl4").html("*答案不能为空")
+                  }
+                  else if(flg2==false){
+                      $(".tabl2").html("*至少选择一个复选框")
+                  }
+                  else{
+                     var parm=$("input,select,textarea").serialize()
+                      $.ajax({
+                          type:"post",
+                          url:"http://39.106.118.44:8081/library/quiz",
+                          data:parm,
+                          success:function(data){
+                             if(typeof data!="undefined"&&data==""){
+                                  $(".tabl3").html("添加成功")
+                             }
+                              else{
+                                 $(".tabl3").html("添加失败")
+                             }
+                          }
+                      })
+                  }
+
+              })
+        })
+    </script>
+</head>
+<body>
+<div class="wrap">
+    <div class="header">
+        <ul class="big">
+            <li class="nnn"><a href="../page/index.html">首页</a></li>
+            <li class="nn"><a href="#">题库</a>
+                <ul class="small">
+                    <li class="mmm"><a href="question.html">公司真题</a> </li>
+                    <li class="mmm"><a href="search.html">真题搜索</a> </li>
+                    <li class="mmm"><a href="key.html">出题系统</a> </li>
+                </ul> </li>
+            <li class="nnn"><a href="#">面试</a></li>
+            <li class="nnn"><a href="#">学习</a></li>
+            <li class="nnn"><a href="#">求职</a></li>
+            <li class="nnn"><a href="#">讨论区</a></li>
+            <li class="nnn"><a href="#">发现</a></li>
+        </ul>
+        <input type="search" value="帖子、试题、试卷、公司" class="btn1">
+        <a href="log.html"> <input type="button" value="登录" class="btn2"></a>
+        <a href="register.html"> <input type="button" value="注册" class="btn3"></a>
+    </div>
+    <div class="center">
+        <form>
+         <p><label class="lab1">题型</label>
+          <select name="type" class="validate-selection">
+              <option value="selected"></option>
+             <option value="1">单选题</option>
+              <option value="2">多选题</option>
+              <option value="3" selected>填空题</option>
+              <option value="4">判断题</option>
+              <option value="5">简答题</option>
+              <option value="6">输出题</option>
+              <option value="7">编程题</option>
+
+          </select></p>
+        <p class="word7">题目 <input type="text" class="btn8" name="questionTitle"></p>
+        <div class="questionsel">选项:
+            <input type="button" value="+" class="add">
+            <span class="tabl1">*</span>
+            <p><input type="text" class="btn9" name="questionOptions">
+            <input type="button" value="-" class="del"></p>
+        </div>
+        <p class="ex">答案：<input type="text" name="answer"><span class="tabl4">*</span></p>
+             <div class="tag">标签组 <span class="tabl2">*</span></div>
+        <p class="ax"><label class="lab1">题目难度</label>
+        <select name="level" class="validate-selection">
+            <option value="selected"></option>
+            <option value="1">简单</option>
+            <option value="2">容易</option>
+            <option value="3">中</option>
+            <option value="4">难</option>
+            <option value="5">非常难</option>
+        </select></p>
+            <input type="button" class="btn10" value="提交" name="btn">
+            <span class="tabl3"></span>
+            </form>
+        <!--<p class="word7">题目答案 <input type="text" class="btn9"></p>-->
+        <!--<input type="button" class="btn10" value="提交">-->
+        <!--<input type="button" class="btn11" value="重置">-->
+    </div>
+    <div class="foot">
+        <p class="word3">
+            Copyright © Your Website
+            More Templates 海康 - Collect from
+        </p>
+    </div>
+</div>
+</body>
+</html>

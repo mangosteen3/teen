@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/jquery-1.10.2.js"></script>
+    <script src="../js/LodopFuncs.js"></script>
+    <link rel="stylesheet" href="../css/search.css">
+    <script>
+        $(function(){
+            $(".big>li").hover(
+                    function(){
+                        $(this).children("ul").stop(true,true).show(500)
+                    },
+                    function(){
+                        $(this).children("ul").stop(true,true).hide(500)
+                    }
+            )
+
+        })
+        $(function(){
+            $.ajax({
+                type:"get",
+                url:"http://39.106.118.44:8081/librarytag/tag",
+                data:"",
+                success:function(msg){
+                    console.log(msg)
+                    $(".tag").append("<p></p>")
+                    for(var i=0;i<msg.length;i++){
+                        $(".tag p").append("<span><input type='checkbox' value='"+
+                                msg[i].tagId+"'name='tag'>"+msg[i].tagName+"</span>")
+                    }
+                }
+            })
+        })
+        //出题的表单验证
+        function check(){
+            $(".font").html("*")
+            var num=$("input[name='num']").val()
+            var flg=false
+            $(".tag p span").each(function(){
+                var v=$(this).find("input").prop("checked")
+                if(v==true){
+                    flg=true
+                }
+            })
+            if(num==""){
+                $(".lab3").text("数量不能为空")
+            }
+            else if(parseInt(num)<1){
+                $(".lab3").text("数量要大于一")
+            }
+            else if(flg==false){
+                $(".lab4").text("至少一个标题组")
+            }
+            else{
+                //拼接变量的字符串
+                var parm=$(".paper input,.paper select").serialize();
+                var value=parm.split("&");
+                var obj=""
+                var idNotIn=[]
+                for(var i=0;i<value.length;i++){
+                    var temp=value[i].split("=")
+                    var name=temp[0]
+                    var val=temp[1]
+                    if(name!="idNotIn"){
+                        obj+="demands%5B0%5D."+name+"="+val+"&"
+                    }
+                }
+                obj=obj.slice(0,obj.length-1)
+                idNotIn=$("input[name=idNotIn]").val().split(" ")
+                console.log(obj)
+                $.ajax({
+                    type:"GET",
+                    url:"http://39.106.118.44:8081/library/newpaper",
+                    data:obj+"&idNotIn="+idNotIn,
+                    success:function(data){
+                        console.log(data)
+                        if(data.length>0){
+                            var name="content"+data[0].type;
+                            if($(".content").hasClass(name)==false) {
+                                $(".show").append("<div class='content" + name + "'></div>")
+                                var str = ""
+                                switch (data[0].type) {
+                                    case 1:
+                                        str = "单选题";
+                                        break;
+                                    case 2:
+                                        str = "多选题";
+                                        break;
+                                    case 3:
+                                        str = "填空题";
+                                        break;
+                                    case 4:
+                                        str = "判断题";
+                                        break;
+                                    case 5:
+                                        str = "简答题";
+                                        break;
+                                    case 6:
+                                        str = "输出题";
+                                        break;
+                                    case 7:
+                                        str = "编程题";
+                                        break;
+                                }
+                                $("." + name).append("<h3>" + str + "</h3>")
+                            }
+                            var len=$("."+"name"+".subtitle").length
+                            for(var i=0;i<data.length;i++){
+                                var v=$(".input[name=idNotIn]").val()
+                                $("input[name=idNotIn]").val(v+data[i].id+" ")
+                                $("."+name).append("<div class='subtitle'></div>")
+                                $("."+name+" .subtitle").eq(len+i).append("<div class='left'><pre>"+
+                                        data[i].question.title+"</pre></div>")
+                                if(data[i].type==1||data[i].type==2){
+                                    for(var j=0;j<data[i].question.option.length;j++){
+                                        $("."+name+".subtitle").eq(len+i).find(".left").append("<pre>"+
+                                                data[i].question.option[j]+"</pre>")
+                                    }
+                                }
+                                $("."+name+" .subtitle").eq(len+i).append("<div class='right'>"+
+                                        "<input type='button' value='修改' onclick='update(this)'>"+
+                                        "<input type='button' value='删除' onclick='del(this)'></div>")
+                            }
+                        }
+                    }
+
+                })
+            }
+        }
+        //删除题型
+        function del(v){
+            var pant=$(v).parent().parent().parent()
+            $(v).parent().parent().remove()
+            if(pant.find(".subtitle").length==0){
+                pant.remove()
+            }
+        }
+        //修改题型
+        function update(v){
+            var test= "";
+            $(v).parent().prev().find("pre").each(function(){
+                test+=$(this).text()+"\n"
+            })
+            $(v).parent().prev().empty();
+            $(v).parent().prev().append("<textarea class='paper-font'>"+test+"</textarea>")
+        }
+        //保存
+        function sav(){
+            $(".left textarea").each(function(){
+                var v=$(this).val()
+                $(this).replaceWith("<pre>"+v+"</pre>")
+            })
+        }
+        //打印
+        function doprint(){
+            $(".right").remove()
+            LODOP=getLodop()
+            LODOP.PRINT_INIT("初始化");
+            LODOP.SET_PRINT_STYLE("FontSize",18)
+            LODOP.SET_PRINT_STYLE("Bold",1);
+            //参数100表示距离左侧100px;88表示距离顶部88px
+            LODOP.ADD_PRINT_HTM(88,100,"80%","80%",
+                    document.getElementsByClassName("show")[0].innerHTML);
+            LODOP.PREVIEW()
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <ul class="big">
+        <li class="nnn"><a href="../page/index.html">首页</a></li>
+        <li class="nn"><a href="#">题库</a>
+            <ul class="small">
+                <li class="mmm"><a href="question.html">公司真题</a> </li>
+                <li class="mmm"><a href="search.html">真题搜索</a> </li>
+                <li class="mmm"><a href="key.html">出题系统</a> </li>
+            </ul> </li>
+        <li class="nnn"><a href="#">面试</a></li>
+        <li class="nnn"><a href="#">学习</a></li>
+        <li class="nnn"><a href="#">求职</a></li>
+        <li class="nnn"><a href="#">讨论区</a></li>
+        <li class="nnn"><a href="#">发现</a></li>
+    </ul>
+    <input type="search" value="帖子、试题、试卷、公司" class="btn1">
+    <a href="log.html"> <input type="button" value="登录" class="btn2"></a>
+    <a href="register.html"> <input type="button" value="注册" class="btn3"></a>
+</div>
+<div class="wrap">
+    <div class="paper dl-main">
+        <div class="zc-title">
+            <h3>出题系统</h3>
+        </div>
+        <div class="paper-main">
+            <p>题型：
+                <select name="type" class="validate-selection ct1">
+                    <option value="1" selected>单选题</option>
+                    <option value="2">多选题</option>
+                    <option value="3">填空题</option>
+                    <option value="4">判断题</option>
+                    <option value="5">简答题</option>
+                    <option value="6">输出题</option>
+                    <option value="7">编程题</option>
+                </select><span class="font lab1">*</span>
+            </p>
+            <p>题目难度：<select name="level" class="validate-selection">
+                <option value="1">简单</option>
+                <option value="2">容易</option>
+                <option value="3" selected>中</option>
+                <option value="4">难</option>
+                <option value="5">非常难</option>
+            </select><span class="font lab2">*</span></p>
+            <p>数量：<input type="text" name="num" class="ct-num"/><span class="font lab3">*</span></p>
+            <div class="tag">
+                标签组：<span class="font lab4">*</span>
+            </div>
+            <input type="hidden" name="idNotIn"/>
+            <p><input type="button" value="出题" onclick="check()" class="ct-btn"/></p>
+        </div>
+    </div>
+    <div class="show">
+        <h2>2020年校招笔试题</h2>
+    </div>
+    <div class="btnall">
+        <input type="button"value="保存"/>
+        <input type="button"value="打印"/>
+    </div>
+</div>
+</div>
+</body>
+
+</html>

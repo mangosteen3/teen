@@ -1,0 +1,202 @@
+.header {
+    width: 100%;
+    height: 60px;
+    background-color: #3B85EB;
+}
+
+.header .big {
+    list-style-type: none;
+    width: 60%;
+    /*position: relative;*/
+    margin-left: 100px;
+}
+
+.header .big .nnn {
+    float: left;
+    width: 80px;
+    height: 60px;
+    margin-left: 10px;
+}
+
+.header .big .nnn:hover {
+    background-color: #0F69E7;
+}
+
+.header .big .nnn a {
+    padding: 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    float: left;
+}
+
+
+.header .big .nn {
+    float: left;
+    width: 80px;
+    height: 60px;
+    margin-left: 10px;
+}
+
+.header .big .nn:hover {
+    background-color: #0F69E7;
+}
+
+.header .big .nn a {
+    padding: 15px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    float: left;
+}
+
+/*.header .big .nn:hover small {*/
+/*display: inline-block;*/
+/*}*/
+
+.small {
+    list-style-type: none;
+    width: 100px;
+    z-index: 2;
+    display: none;
+    margin-top: 60px;
+    position: absolute;
+    background-color: #3B85EB;
+}
+
+.small .mmm a {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.header .small .mmm:hover {
+    background-color: #0F69E7;
+}
+
+.header .btn1 {
+    width: 250px;
+    border-radius: 5px;
+    height: 50px;
+    margin: 5px;
+    background-color: white;
+    border: none;
+    color: #CCCCC4;
+    font-size: 16px;
+    margin-left: 100px;
+}
+
+.header .btn2 {
+    background-color: #F76FE8;
+    border: none;
+    border-radius: 5px;
+    height: 50px;
+    width: 70px;
+    color: white;
+    margin-left: 50px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.header .btn3 {
+    background-color: #F76FE8;
+    border: none;
+    border-radius: 5px;
+    height: 50px;
+    width: 70px;
+    color: white;
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/*正文部分*/
+*{
+    margin: 0px;
+    padding: 0px;
+}
+.wrap{
+    width: 80%;
+    margin: 100px auto;
+}
+
+h3 {
+    text-align: center;
+    font-size: 24px;
+}
+
+
+.paper{
+    width: 100%;
+}
+.paper .paper-main{
+    width: 80%;
+    margin: 0px auto;
+}
+.paper-main p select{
+    width: 650px;
+}
+.paper-main p .ct-num{
+    width: 650px;
+    margin-left: 4%;
+}
+.paper-main p .ct1{
+    margin-left: 3%;
+}
+.paper p{
+    margin: 7% 0;
+}
+.paper .paper-main .ct-btn{
+    width: 30%;
+    color: white;
+    border: none;
+    margin-left: 5%;
+    background-color: #3B85EB;
+    line-height: 40px;
+    border-radius: 5px;
+}
+.show{
+    border: 1px dashed #3B85EB;
+    padding: 20px;
+    /*display: none;*/
+}
+.show h2{
+    text-align: center;
+    margin: 20px auto;
+    color: #3B85EB;
+}
+.content{
+    overflow: hidden;
+}
+.show .subtitle{
+    overflow: hidden;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.btnall input{
+    margin: 20px 10px;
+}
+.font{
+    color: red;
+    margin-left: 20px;
+}
+.tag p span{
+    margin: 0px 5px;
+}
+.paper-font{
+    width: 700px;
+    height: 200px;
+}
+
+.tag {
+    margin-top:20px;
+}
+
+

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../js/jquery-1.10.2.js"></script>
+    <script src="../js/LodopFuncs.js"></script>
+    <link rel="stylesheet" href="../css/key.css">
+    <script>
+        $(function(){
+            $(".big>li").hover(
+                    function(){
+                        $(this).children("ul").stop(true,true).show(500)
+                    },
+                    function(){
+                        $(this).children("ul").stop(true,true).hide(500)
+                    }
+            )
+
+        })
+
+        //查询按钮
+        $(function(){
+            //设置隐藏div的高度
+            $(".update").height($(window).height())
+
+            //查出标题组，题目类型：Java，JS，html，css
+            $.ajax({
+                type: "get",
+                url: "http://39.106.118.44:8081/librarytag/tag",
+                data: "",
+                success: function (msg) {
+                    console.log(msg)
+                    $(".tag").append("<p></p>")
+                    for(var i=0;i<msg.length;i++){
+                        $(".tag p").append("<span><input type='checkbox' value='"+
+                                msg[i].tagId+"'name='tag'>"+msg[i].tagName+"</span>")
+
+                    }
+                }
+            })
+            //查询按钮点击
+            $(".sel").click(function () {
+                var parm=$(".select input,.select select").serialize();
+                parm+="&index=0&size=5";
+                selall(parm,1)
+            })
+
+            //查询函数
+            function selall(parm,indexlen){
+                $.ajax({
+                    type:"GET",
+                    url:"http://39.106.118.44:8081/library/quiz",
+                    data:parm,
+                    success:function(data){
+                        $(".data").empty();
+                        $(".list ul").empty();
+                        for(var i=0;i<data.content.length;i++){
+                            $(".data").append("<div class='item'><div class='xiang "+data.content[i].id+"' ></div>" +
+                                    ""+"<p><input type='button' value='删除' class='del' " +
+                                    "onclick='del(\""
+                                    +data.content[i].id+"\")'></p></div>");
+
+                            $(".xiang").eq(i).append("<p class='title' onclick='show(\""
+                                    +data.content[i].id+"\")'>"+
+                                    data.content[i].question.title+"</p>");
+
+                            $(".xiang").eq(i).append("<p class='anter'>"+
+                                    data.content[i].answer.toString().trim().replace("<","\<").replace(">","\>")+"</p>")
+
+                            for(var j=0;j<data.content[i].tags.length;j++){
+                                $(".xiang").eq(i).append("<span class='tablab'>"+
+                                        data.content[i].tags[j]+"</span>");
+                            }
+                            var type=""
+                            switch (data.content[i].type){
+                                case 1:type="单选题";break;
+                                case 2:type="多选题";break;
+                                case 3:type="填空题";break;
+                                case 4:type="判断题";break;
+                                case 5:type="简答题";break;
+                                case 6:type="输出题";break;
+                                case 7:type="编程题";break;
+                            }
+                            var level=""
+                            switch (data.content[i].level){
+                                case 1:level="简单";break;
+                                case 2:level="容易";break;
+                                case 3:level="中";break;
+                                case 4:level="难";break;
+                                case 5:level="非常难";break;
+                            }
+                            $(".xiang").eq(i).append("<p class='qi'><span>题型："+
+                                    type+"</span><span>难度："+
+                                    level+"</span></p>");
+
+                        }
+                        if(data.totalPages<=1){
+                            $(".list ul").append("")
+                        }
+                        else{
+                            $(".list ul").append("<li><span class='page-first page-link' onclick='first(0)'>《</span> </li>");
+                            $(".list ul").append("<li><span class='page-prev page-link' onclick='prev()'>&lt;</span> </li>");
+                            var start=0;
+                            var end=data.totalPages;
+                            if(indexlen>5&&data.totalPages>10){
+                                start=indexlen-1;
+                                end=indexlen+9;
+                            }
+                            if(indexlen>data.totalPages-5){
+                                end=data.totalPages;
+                            }
+                            for(var i=start;i<end;i++){
+                                if(i==data.number){
+                                    $(".list ul").append("<li><span class='page-link active'>"+(i+1)+"</span> </li>")
+
+                                }
+                                else{
+                                    $(".list ul").append("<li><span class='page-link' onclick='numbtn("+(i+1)+")'>"+(i+1)+"</span> </li>")
+                                }
+                            }
+                            $(".list ul").append("<li><span class='page-next page-link' onclick='next("+data.totalPages+")'>&gt;</span> </li>")
+                            $(".list ul").append("<li><span class='page-last page-link' onclick='last("+data.totalPages+")'>》</span> </li>")
+                            if(data.first){
+                                $(".page-first,.page-prev").addClass("disabled")
+                            }
+                            else if(data.last){
+                                $(".page-last,.page-next").addClass("disabled")
+                            }
+                        }
+                    }
+                })
+            }
+
+            // 添加选项
+            $(".add").click(function(){
+                $(".questionsel").append('<p><input type="text" name="questionOptions"/> '
+                        +'<input type="button" value="-" class="del"/></p>')
+            })
+            // 删除选项(绑定)
+            $(".questionsel").delegate(".del","click",function(){
+                $(this).parent().remove();
+            })
+            //表单验证
+            $(".update .btn").click(function(){
+                $(".update span:not(.closed,.tag p span)").html("*")
+                var flg1=false;
+                var flg2=false
+                $(".update input[name=questionOptions]").each(function(){
+                    if(this.val()==""){
+                        flg1=true
+                    }
+                })
+
+                $("input[name=tags]").each(function(){
+                    if($(this).prop("checked")==true){
+                        flg2=true;
+                    }
+                })
+                if($("input[name=questionTitle]").val()==""){
+                    $(".lab3").html("*题干不能为空")
+                }
+                else if($(".questionse1").css("display")=="block"&&flg1==true){
+                    $(".lab1").html("*选项不能为空")
+                }
+                else if($("input[name=answer]").val()==""){
+                    $(".lab4").html("*答案不能为空")
+                }
+                else if(flg2==false){
+                    $(".lab2").html("*至少选择一个复选框")
+                }
+                else{
+                    var parm=$(".update input,.update select").serialize()
+                    $.ajax({
+                        type:"PUT",
+                        url:"http://39.106.118.44:8081/library/quiz/"+frm.id.value+"/",
+                        data:parm,
+                        success:function(data){
+                            console.log(data);
+                            $(".update").css({display:"none"})
+                            $(".data .cx-item ."+data.id).empty()
+                            $(".data .cx-item ."+data.id).append("<p class='title' onclick='show(\""+data.id+"\")'>"+
+                                    data.question.title+"</p>")
+                            $(".data .cx-item ."+data.id).append("<p class='anter'>"+
+                                    data.answer.toString().trim().replace("<","\<").replace(">","\>")+
+                                    "</p>")
+                            for(var j=0;j<data.tags.length;j++){
+                                $(".data .cx-item ."+data.id).append("<span class='taglab'>"+
+                                        data.tags[j]+ "</span>")
+                            }
+                            var type=""
+                            switch ( data.type){
+                                case 1:type="单选题";break;
+                                case 2:type="多选题";break;
+                                case 3:type="填空题";break;
+                                case 4:type="判断题";break;
+                                case 5:type="简答题";break;
+                                case 6:type="输出题";break;
+                                case 7:type="编程题";break;
+                            }
+                            var level=""
+                            switch ( data.level){
+                                case 1:level="简单";break;
+                                case 2:level="容易";break;
+                                case 3:level="中";break;
+                                case 4:level="难";break;
+                                case 5:level="非常难";break;
+                            }
+                            $(".data .cx-item ."+data.id).append("<p class='qi'><span>题型："+
+                                    type+"</span><span>难度："+
+                                    level+"</span></p>")
+                        }
+                    })
+
+                }
+            })
+            //关闭修改页面
+            $(".closed").click(function(){
+                $(".update").css({display:"none"})
+            })
+        })
+        //跳转到尾页
+        function last(num){
+            var parm=$(".select input,.select select").serialize()
+            parm+="&index="+(num-1)+"&size=5"
+            selall(parm,num-1)
+        }
+        //跳转到首页
+        function first(num){
+            var parm=$(".select input,.select select").serialize()
+            parm+="&index="+num+"&size=5"
+            selall(parm,1)
+        }
+        //上一页
+        function prev(){
+            var parm=$(".select input,.select select").serialize()
+            var page=$(".active").text()
+            if(parseInt(page)>2){
+                parm+="&index="+(page-2)+"&size=5"
+                selall(parm,page-1)
+            }
+        }
+        //下一页
+        function next(num){
+            var parm=$(".select input,.select select").serialize()
+            var page=$(".active").text()
+            if(parseInt(page)<=parseInt(num)-1) {
+                parm += "&index=" + parseInt(page) + "&size=5"
+                selall(parm, page + 1)
+            }
+        }
+        //点击数字跳转页面
+        function numbtn(num){
+            if($(this).hasClass("active")==false){
+                var parm=$(".select input,.select select").serialize()
+                parm+="&index="+(parseInt(num)-1)+"&size=5"
+                selall(parm,parseInt(num)-1)
+            }
+        }
+
+        //删除题目信息
+        function del(id){
+            if(confirm("确定删除吗")){
+                $.ajax({
+                    type:"DELETE",
+                    url:"http://39.106.118.44:8081/library/quiz/"+id,
+                    data:"",
+                    success:function(data){
+                        var parm=$(".select input,.select select").serialize()
+                        parm+="&index=0&size=5"
+                        selall(parm,1)
+                    }
+                })
+            }
+        }
+
+        //显示修改的div
+        function show(id){
+            $.ajax({
+                type:"GET",
+                url:"http://39.106.118.44:8081/library/quiz/"+id+"/",
+                data:"",
+                success:function(data){
+                    $(".update").css({display:"block"})
+                    frm.questionTitle.value=data.question.title;
+                    frm.id.value=data.id
+                    frm.type.value=data.type
+                    frm.level.value=data.level
+                    frm.answer.value=data.answer;
+                    if(data.type==1||data.type==2){
+                        $(".questionsel").css({display:"block"});
+                        $(".questionsel p").remove();
+                        for(var i=0;i<data.question.option.length;i++){
+                            $(".questionsel").append("<p><input type='text' name='questionOptions' value='"+
+                                    data.question.option[i]+"'/><input type='button' value='-' class='del'/></p>")
+                        }
+                    }
+                    else{
+                        $(".questionsel").css({display:"none"})
+                    }
+
+                    $(".update .tag p span").each(function(){
+                        for(var i=0;i<data.tags.length;i++){
+                            if($(this).text()==data.tags[i]){
+                                $(this).find(".input").prop({check:true})
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+<div class="header">
+    <ul class="big">
+        <li class="nnn"><a href="../page/index.html">首页</a></li>
+        <li class="nn"><a href="#">题库</a>
+            <ul class="small">
+                <li class="mmm"><a href="question.html">公司真题</a> </li>
+                <li class="mmm"><a href="search.html">真题搜索</a> </li>
+                <li class="mmm"><a href="key.html">出题系统</a> </li>
+            </ul> </li>
+        <li class="nnn"><a href="#">面试</a></li>
+        <li class="nnn"><a href="#">学习</a></li>
+        <li class="nnn"><a href="#">求职</a></li>
+        <li class="nnn"><a href="#">讨论区</a></li>
+        <li class="nnn"><a href="#">发现</a></li>
+    </ul>
+    <input type="search" value="帖子、试题、试卷、公司" class="btn1">
+    <a href="log.html"> <input type="button" value="登录" class="btn2"></a>
+    <a href="register.html"> <input type="button" value="注册" class="btn3"></a>
+</div>
+<div class="wrap">
+    <h3>题库系统</h3>
+
+    <div class="select">
+        <div class="fom">
+            <p><label class="lab1">题型</label>
+                <select name="type" class="validate-selection">
+                    <option value="1">单选题</option>
+                    <option value="2">多选题</option>
+                    <option value="3" selected>填空题</option>
+                    <option value="4">判断题</option>
+                    <option value="5">简答题</option>
+                    <option value="6">输出题</option>
+                    <option value="7">编程题</option>
+                </select></p>
+            <p class="word7">题目 <input type="text" class="btn8" name="questionTitle"></p>
+
+            <p><label class="lab1">难度级别</label>
+                <select name="level" class="validate-selection">
+                    <option value="selected"></option>
+                    <option value="1">简单</option>
+                    <option value="2">容易</option>
+                    <option value="3">中</option>
+                    <option value="4">难</option>
+                    <option value="5">非常难</option>
+                </select></p>
+            <div class="tag">
+                标签组:
+            </div>
+            <p><input type="button" value="查询" class="sel"></p>
+        </div>
+
+    </div>
+    <div class="data"></div>
+    <div class="list">
+        <ul>
+        </ul>
+    </div>
+    <div class="update">
+        <form name="frm">
+            <span class="closed"> X </span>
+            <h3>修改录题页面</h3>
+            <div class="frm-main">
+                <p>题干：<input type="text" name="questionTitle"/><span class="lab3">*</span></p>
+                <div class="questionsel">选项：<input type="button" value="+" class="add"/>
+                    <span class="lab1">*</span>
+                    <p><input type="text" name="questionOptions"/>
+                        <input type="button" value="-" class="del"/></p>
+                </div>
+                <p>答案：<input type="text" name="answer"/><span class="lab4">*</span></p>
+                <div class="tag">标签组：<span class="lab2">*</span></div>
+                <p>题目难度：<select name="level" class="validate-selection">
+                    <option value="1">简单</option>
+                    <option value="2">容易</option>
+                    <option value="3" selected>中</option>
+                    <option value="4">难</option>
+                    <option value="5">非常难</option>
+                </select></p>
+                <p><input type="button" value="提交" name="btn"/></p>
+                <input type="hidden" name="id"/>
+                <input type="hidden" name="type"/>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="foot">
+    <p class="word3">
+        Copyright © Your Website
+        More Templates 海康 - Collect from
+    </p>
+</div>
+</body>
+</html>

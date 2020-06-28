@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+   <link rel="stylesheet" href="../css/index.css">
+    <script src="../js/jquery-1.10.2.js"></script>
+    <script src="../js/LodopFuncs.js"></script>
+    <script>
+        $(function(){
+            $(".big>li").hover(
+                    function(){
+                        $(this).children("ul").stop(true,true).show(500)
+                    },
+                    function(){
+                        $(this).children("ul").stop(true,true).hide(500)
+                    }
+            )
+
+        })
+
+
+        var num=0;
+        $(function(){
+            var terval=setInterval("fun()",4000);
+            $(".hhh li").click(function(){
+                clearInterval(terval)
+                var i=$(this).index();
+                $(".hhh li").css({backgroundColor:"#49B04C"}).remove("link")
+                $(this).css({backgroundColor:"greenyellow"}).addClass("link")
+                $(".box6 img").css({opacity:0}).remove("qqq")
+                $(".box6 img").eq(i).css({opacity:1}).addClass("qqq");
+                num=i
+                terval=setInterval("fun()",4000);
+            })
+        })
+        function fun(){
+            var v1=$(".box6 img").eq(num)
+            var v2;
+            if(v1.next().length==0){
+                v2=$(".box6 img:first");
+                num=0
+            }
+            else{
+                v2=v1.next()
+                num++;
+            }
+            var i=v2.index()
+
+            v1.animate({opacity:0},2000,function(){
+                v1.removeClass("qqq")
+            })
+            v2.animate({opacity:1},2000,function(){
+                v2.addClass("qqq")
+            })
+            $(".hhh li").css({backgroundColor:"#49B04C"})
+            $(".hhh li").eq(i).css({backgroundColor:"greenyellow"})
+
+        }
+
+
+    </script>
+    <title></title>
+</head>
+<body>
+     <div class="wrap">
+         <div class="header">
+             <ul class="big">
+                 <li class="nnn"><a href="../page/index.html">首页</a></li>
+                 <li class="nn"><a href="#">题库</a>
+                 <ul class="small">
+                     <li class="mmm"><a href="question.html">公司真题</a> </li>
+                     <li class="mmm"><a href="search.html">真题搜索</a> </li>
+                     <li class="mmm"><a href="key.html">出题系统</a> </li>
+                 </ul> </li>
+                 <li class="nnn"><a href="#">面试</a></li>
+                 <li class="nnn"><a href="#">学习</a></li>
+                 <li class="nnn"><a href="#">求职</a></li>
+                 <li class="nnn"><a href="#">讨论区</a></li>
+                 <li class="nnn"><a href="#">发现</a></li>
+             </ul>
+             <input type="search" value="帖子、试题、试卷、公司" class="btn1">
+             <a href="log.html"> <input type="button" value="登录" class="btn2"></a>
+             <a href="register.html"> <input type="button" value="注册" class="btn3"></a>
+         </div>
+         <div class="wrap1">
+             <div class="box6">
+                 <img src="../img/one.png" class="qqq" >
+                 <img src="../img/two.png">
+                 <img src="../img/four.jpg"  >
+             </div>
+             <ul class="hhh">
+                 <li  class="link">1</li>
+                 <li>2</li>
+                 <li>3</li>
+             </ul>
+         </div>
+         <!--<div class="lunbo">-->
+             <!--<img src="../img/one.png" class="img1">-->
+             <!--<img src="../img/two.png" class="img2">-->
+             <!--<img src="../img/four.jpg" class="img3">-->
+         <!--</div>-->
+         <p class="word1">笔试备战</p>
+         <p class="word2">职业能力测试</p>
+         <div class="text">
+             <div class="hello">
+                 <p>Java工程师能力评估</p>
+                 <img src="../img/Java.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>C/C++工程师能力评估</p>
+                 <img src="../img/c.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>前端工程师能力评估</p>
+                 <img src="../img/s.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>算法工程师能力评估</p>
+                 <img src="../img/f.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>运维工程师能力评估</p>
+                 <img src="../img/y.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>测试工程师能力评估</p>
+                 <img src="../img/e.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>产品经理能力评估</p>
+                 <img src="../img/p.png" width="100" height="100">
+             </div>
+             <div class="hello">
+                 <p>运营岗位能力评估</p>
+                 <img src="../img/g.png" width="100" height="100">
+             </div>
+         </div>
+         <div class="foot">
+             <p class="word3">
+                 Copyright © Your Website
+                 More Templates 海康 - Collect from
+             </p>
+         </div>
+     </div>
+</body>
+</html>
